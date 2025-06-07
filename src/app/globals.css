@@ -19,3 +19,23 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+input,
+textarea,
+select {
+  color: #000;
+  /* Warna teks input: hitam */
+  background-color: #fff;
+  /* Warna latar belakang input: putih (opsional) */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #888;
+  /* Warna placeholder: abu-abu */
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
