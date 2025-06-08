@@ -25,7 +25,7 @@ export async function GET(request) {
                    s.reference as tracking_number, s.courier as courier, s.status as shipment_status
             FROM orders o
             JOIN shipments s ON o.id = s.order_id
-            WHERE o.status = 'shipped' AND s.reference IS NOT NULL
+            WHERE o.status IN ('shipped', 'success')  AND s.reference IS NOT NULL
             LIMIT ? OFFSET ?
         `;
         const [orders] = await db.query(query, [limit, offset]);

@@ -27,5 +27,14 @@ export default async function loginData({ email, password }) {
         };
     }
 
+    // 3. Redirect berdasarkan role
+    if (session.user.role === 'admin') {
+        window.location.href = '/admin/products';
+    } else if (session.user.role === 'customer') {
+        window.location.href = '/dashboard';
+    } else {
+        window.location.href = '/';
+    }
+
     return { success: true };
 }
