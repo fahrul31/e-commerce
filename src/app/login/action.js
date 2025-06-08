@@ -27,14 +27,5 @@ export default async function loginData({ email, password }) {
         };
     }
 
-    // 3. Redirect berdasarkan role
-    if (session.user.role === 'teacher') {
-        window.location.href = '/admin/dashboard';
-    } else if (session.user.role === 'student') {
-        window.location.href = '/customer/index';
-    } else {
-        window.location.href = '/';
-    }
-
     return { success: true };
 }

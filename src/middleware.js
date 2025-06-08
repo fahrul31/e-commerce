@@ -5,10 +5,10 @@ const secret = process.env.NEXTAUTH_SECRET;
 
 const redirectRoutes = {
     admin: "/admin/products",
-    customer: "/index",
+    customer: "/dashboard",
 };
 
-const publicRoutes = ["/index", "/login", "/register"];
+const publicRoutes = ["/dashboard", "/login", "/register"];
 
 const protectedRoutes = {
     admin: ["/admin"],
@@ -74,7 +74,7 @@ export async function middleware(req) {
     } else if (userRole === "customer") {
         const allowedRoutes = protectedRoutes.customer;
         if (!isProtected(pathname, allowedRoutes)) {
-            return NextResponse.redirect(new URL("/index", origin));
+            return NextResponse.redirect(new URL("/dashboard", origin));
         }
     }
 
@@ -84,7 +84,7 @@ export async function middleware(req) {
 export const config = {
     matcher: [
         "/",
-        "/index",
+        "/dashboard",
         "/profile",
         "/cart",
         // "/checkout",
