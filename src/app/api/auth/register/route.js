@@ -1,7 +1,6 @@
 import { hash } from "../../../utils/hashing/hashing";
 import db from "../../../../lib/db";
 import { NextResponse } from "next/server";
-import { response, responseSuccessWithData } from "../../../utils/helper/response";
 
 export async function POST(request) {
     try {
@@ -29,7 +28,7 @@ export async function POST(request) {
         if (existingUser) {
             console.log("Registration failed: Email already exists");
             return NextResponse.json(
-                response(false, "Email sudah terdaftar"),
+                { success: false, message: "Email sudah terdaftar" },
                 { status: 409 }
             );
         }
@@ -69,7 +68,7 @@ export async function POST(request) {
     } catch (e) {
         console.error("Registration error:", e);
         return NextResponse.json(
-            response(false, e.message || "Terjadi kesalahan saat registrasi"),
+            { success: false, message: "Terjadi kesalahan saat registrasi" },
             { status: 500 }
         );
     }
