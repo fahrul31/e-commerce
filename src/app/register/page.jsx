@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import registerData from "./action";
 import { User, Mail, Lock, Eye, EyeOff, ArrowLeft, ShoppingBag, Check, X } from 'lucide-react';
 import SocialLoginButtons from '../components/socialLoginButtons';
+import Swal from "sweetalert2";
 
 const passwordRequirements = [
     { text: 'Minimal 8 karakter', check: pwd => pwd.length >= 8 },
@@ -33,7 +34,7 @@ export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm({
         resolver: yupResolver(registerSchema)
     });
     const watchPassword = watch('password', '');
@@ -44,14 +45,35 @@ export default function RegisterPage() {
             setIsLoading(true);
 
             const result = await registerData(data);
-            console.log("Registration result:", result);
-
+            console.log(result);
+            if (result?.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registrasi berhasil!',
+                    text: result?.message,
+                });
+                reset();
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1500);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Registrasi gagal',
+                    text: result?.message || 'Terjadi kesalahan saat registrasi',
+                });
+            }
         } catch (error) {
-            console.error("Registration error:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Terjadi kesalahan pada server.',
+            });
         } finally {
             setIsLoading(false);
         }
     };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 flex">
             {/* Left Branding */}

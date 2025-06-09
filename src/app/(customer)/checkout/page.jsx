@@ -128,7 +128,7 @@ export default function CheckoutPage() {
                         const orderId = data.data.order_id;
                         const reference = data.data.reference;
                         updateTransactionStatus(orderId, reference, paymentMethod);
-                        window.location.href = "/index";
+                        window.location.href = "/dashboard";
 
                     },
                     onPending: () => {

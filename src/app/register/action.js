@@ -1,13 +1,7 @@
-'use server'
-
-import { cookies, headers } from "next/headers";
+'use client'
 import { redirect } from 'next/navigation';
-import * as JWT from "@/app/utils/jwt/jwt";
+export default async function registerData({ name, email, password, confirmPassword }) {
 
-
-export default async function login({ name, email, password, confirmPassword }) {
-    const cookieStore = await cookies(); // Ambil cookies terlebih dahulu
-    const csrfCookie = cookieStore.get("next-auth.csrf-token")?.value;
 
     if (password != confirmPassword) {
         return {
@@ -18,15 +12,18 @@ export default async function login({ name, email, password, confirmPassword }) 
     const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'X-Csrf-Token': csrfCookie
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({ name, email, password }),
     });
 
     const responseData = await response.json();
-    if (response.ok && responseData.success) {
-        redirect('/login');
+    if (responseData.success) {
+        return {
+            success: true,
+            message: "Pendaftaran berhasil",
+            data: responseData.message
+        }
     } else {
         console.log("Registration failed:", responseData.message);
         return {

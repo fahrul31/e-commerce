@@ -1,4 +1,3 @@
-// app/api/transactions/detail/route.js
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { getToken } from "next-auth/jwt";

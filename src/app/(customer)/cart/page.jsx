@@ -87,7 +87,7 @@ export default function CartPage() {
                             </div>
                         </div>
                         <button onClick={() => {
-                            window.location.href = "/index";
+                            window.location.href = "/dashboard";
                         }} className="text-indigo-600 hover:text-indigo-700 font-medium">
                             Lanjut Belanja
                         </button>
@@ -187,7 +187,7 @@ export default function CartPage() {
                                 <p className="text-gray-500 mb-6">Ayo mulai belanja!</p>
                                 <button
                                     onClick={() => {
-                                        window.location.href = "/index";
+                                        window.location.href = "/dashboard";
                                     }}
                                     className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
                                     Mulai Belanja
