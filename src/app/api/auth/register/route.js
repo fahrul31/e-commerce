@@ -1,6 +1,7 @@
 import { hash } from "../../../utils/hashing/hashing";
 import db from "../../../../lib/db";
 import { NextResponse } from "next/server";
+import transporter from "@/lib/nodemailer";
 
 export async function POST(request) {
     try {
@@ -55,6 +56,27 @@ export async function POST(request) {
             // Commit transaction
             console.log("Committing transaction...");
             await db.query('COMMIT');
+
+            const customerMailOptions = {
+                from: process.env.EMAIL,
+                to: email,
+                subject: `Registrasi Akun Berhasil - Selamat datang, ${name}!`,
+                html: `
+                    <p>Halo <strong>${name}</strong>,</p>
+                    <p>Terima kasih telah melakukan registrasi di layanan kami.</p>
+                    <p>Berikut adalah detail akun Anda:</p>
+                    <ul>
+                        <li>Email: ${email}</li>
+                        <li>Nama: ${name}</li>
+                    </ul>
+                    <p>Anda sekarang dapat login dan menikmati layanan kami.</p>
+                    <p>Jika Anda memiliki pertanyaan, jangan ragu untuk menghubungi kami.</p>
+                    <p>Salam hangat,<br/>Tim Support</p>
+                `,
+            };
+
+            // Kirim email ke customer yang melakukan registrasi
+            await transporter.sendMail(customerMailOptions);
 
             return NextResponse.json({
                 success: true,
