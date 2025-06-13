@@ -102,8 +102,8 @@ export async function POST(request) {
 
         const parameter = {
             transaction_details: {
-                reference: reference,
-                order_id: order_id,
+                reference: order_id,
+                order_id: reference,
                 gross_amount: total_price
             },
             customer_details: {
