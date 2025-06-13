@@ -16,7 +16,7 @@ export async function POST(req) {
         const rawSig = payload.order_id + payload.status_code + payload.gross_amount + serverKey;
         hash.update(rawSig);
         const expectedSignature = hash.digest("hex");
-        const order_id = payload.order_id.split('_');
+        const [reference, order_id] = payload.order_id.split('_');
 
 
         //signature valid
@@ -26,7 +26,6 @@ export async function POST(req) {
 
 
         // Ambil informasi penting dari notifikasi
-        const reference = payload.order_id; // ID pesanan
         const transactionStatus = payload.transaction_status; // Status transaksi dari Midtrans
         const paymentType = payload.payment_type; // Jenis pembayaran (misalnya: credit_card, bank_transfer)
         const paidAt = payload.settlement_time ? new Date(payload.settlement_time) : null;
