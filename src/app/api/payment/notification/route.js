@@ -16,7 +16,7 @@ export async function POST(req) {
         const rawSig = payload.order_id + payload.status_code + payload.gross_amount + serverKey;
         hash.update(rawSig);
         const expectedSignature = hash.digest("hex");
-        const order_id = fullOrderId.split('_');
+        const order_id = payload.order_id.split('_');
 
 
         //signature valid
