@@ -16,8 +16,8 @@ export async function POST(req) {
         const rawSig = payload.order_id + payload.status_code + payload.gross_amount + serverKey;
         hash.update(rawSig);
         const expectedSignature = hash.digest("hex");
-        const [order_id_midtrans, order_id] = payload.order_id.split('_');
-
+        const [reference, order_id] = payload.order_id.split('_');
+        console.log(reference, order_id);
 
         //signature valid
         if (payload.signature_key !== expectedSignature) {
@@ -26,7 +26,6 @@ export async function POST(req) {
 
 
         // Ambil informasi penting dari notifikasi
-        const reference = payload.order_id; // ID pesanan
         const transactionStatus = payload.transaction_status; // Status transaksi dari Midtrans
         const paymentType = payload.payment_type; // Jenis pembayaran (misalnya: credit_card, bank_transfer)
         const paidAt = payload.settlement_time ? new Date(payload.settlement_time) : null;
@@ -41,6 +40,8 @@ export async function POST(req) {
         } else if (transactionStatus === "cancel") {
             finalStatus = "cancelled"; // Jika transaksi dibatalkan
         }
+
+        console.log(paymentType, paidAt, reference);
 
 
         // Update status transaksi di database
@@ -63,6 +64,8 @@ export async function POST(req) {
                 JOIN addresses a ON o.user_id = a.user_id AND a.is_primary = 1
                 WHERE o.id = ?
             `, [order_id]);
+
+            console.log(orderResult);
 
             if (orderResult.length === 0) {
                 return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
