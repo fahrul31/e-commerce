@@ -102,14 +102,13 @@ export async function POST(request) {
 
         const parameter = {
             transaction_details: {
-                reference: order_id,
-                order_id: reference,
+                order_id: `${reference}_${order_id}`,
                 gross_amount: total_price
             },
             customer_details: {
                 first_name: shipping_name,
                 phone: shipping_contact,
-                address: shipping_address
+                address: shipping_address,
             },
             item_details: [
                 ...items.map(i => ({
