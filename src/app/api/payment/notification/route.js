@@ -13,7 +13,8 @@ export async function POST(req) {
         // Verifikasi signature dari Midtrans
         const serverKey = process.env.MIDTRANS_SERVER_KEY;
         const hash = crypto.createHash("sha512");
-        const rawSig = payload.order_id + payload.status_code + payload.gross_amount + serverKey;
+        const order_id = payload.order_id;
+        const rawSig = payload.reference + payload.status_code + payload.gross_amount + serverKey;
         hash.update(rawSig);
         const expectedSignature = hash.digest("hex");
 
@@ -25,7 +26,7 @@ export async function POST(req) {
 
 
         // Ambil informasi penting dari notifikasi
-        const reference = payload.order_id; // ID pesanan
+        const reference = payload.reference; // referensi pesanan
         const transactionStatus = payload.transaction_status; // Status transaksi dari Midtrans
         const paymentType = payload.payment_type; // Jenis pembayaran (misalnya: credit_card, bank_transfer)
         const paidAt = payload.settlement_time ? new Date(payload.settlement_time) : null;
@@ -60,7 +61,7 @@ export async function POST(req) {
                 JOIN users u ON o.user_id = u.id
                 JOIN addresses a ON o.user_id = a.user_id AND a.is_primary = 1
                 WHERE o.id = ?
-            `, [reference]);
+            `, [order_id]);
 
             if (orderResult.length === 0) {
                 return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
@@ -74,7 +75,7 @@ export async function POST(req) {
                 FROM order_items oi
                 JOIN products p ON oi.product_id = p.id
                 WHERE oi.order_id = ?
-            `, [order.order_id]);
+            `, [order_id]);
 
             // Kirim email dengan fungsi terpisah
             await sendPurchaseEmails(order, items);
