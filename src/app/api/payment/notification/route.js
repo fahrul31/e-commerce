@@ -56,7 +56,7 @@ export async function POST(req) {
             // Ambil data order beserta user dan alamat
             const [orderResult] = await db.query(`
                 SELECT
-                    o.user_id, o.total_price, o.status, o.created_at, o.updated_at,
+                    o.id as order_id, o.user_id, o.total_price, o.status, o.created_at, o.updated_at,
                     u.name AS customer_name, u.email, u.phone,
                     a.full_address AS shipping_address
                 FROM orders o
