@@ -98,7 +98,7 @@ export async function POST(request) {
             serverKey: process.env.MIDTRANS_SERVER_KEY
         });
 
-        const reference = `TRX_${Date.now()}`;
+        const reference = `TRX-${Date.now()}`;
 
         const parameter = {
             transaction_details: {
