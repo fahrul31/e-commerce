@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
 import React, { useState } from 'react';
-import { User, ShoppingBag, Settings, LogOut } from 'lucide-react';
+import { User, ShoppingBag, MessageCircle, LogOut } from 'lucide-react';
 import ProfileSection from '@/app/components/customer/ProfileSection';
 import TransactionSection from '@/app/components/customer/TransactionSection';
-import { signOut } from "next-auth/react";
+import ChatComponent from '@/app/components/ChatComponent';
+import { useSession, signOut } from "next-auth/react";
 
 const ProfileLayout = () => {
     const [activeTab, setActiveTab] = useState('profile');
-
+    const { data: session } = useSession();
+    console.log(session);
     return (
         <div>
             <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -39,6 +41,7 @@ const ProfileLayout = () => {
                                     {[
                                         { id: 'profile', label: 'Profil Saya', icon: User },
                                         { id: 'transactions', label: 'Riwayat Transaksi', icon: ShoppingBag },
+                                        { id: 'chat', label: 'Chat Admin', icon: MessageCircle },
                                     ].map((item) => {
                                         const Icon = item.icon;
                                         return (
@@ -81,6 +84,9 @@ const ProfileLayout = () => {
                                         <p className="text-gray-500 text-lg">Pengaturan</p>
                                         <p className="text-gray-400 text-sm mt-2">Fitur ini akan segera hadir</p>
                                     </div>
+                                )}
+                                {activeTab === 'chat' && (
+                                    <ChatComponent senderId={session.user.id} />
                                 )}
                             </div>
                         </div>

@@ -71,7 +71,6 @@ export async function GET(request) {
 
 export async function POST(req) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    console.log("Token:", token);
 
     if (!token || !token.role || token.role !== "admin") {
         return NextResponse.json(

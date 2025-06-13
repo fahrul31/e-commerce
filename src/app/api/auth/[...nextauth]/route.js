@@ -12,7 +12,7 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_SECRET_KEY,
         }),
         CredentialsProvider({
-            name: "Credentials",
+            name: "credentials",
             credentials: {
                 email: { label: "Email", type: "text" },
                 password: { label: "Password", type: "password" }
@@ -82,7 +82,6 @@ const handler = NextAuth({
         async session({ session, token }) {
             session.user.id = token.id;
             session.user.role = token.role;
-            session.user.accessToken = token.accessToken;
             return session;
         },
     },

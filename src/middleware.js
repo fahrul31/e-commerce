@@ -36,7 +36,7 @@ export async function middleware(req) {
     if (publicRoutes.includes(pathname)) {
         if (token?.role) {
             const redirectPath = redirectRoutes[token.role];
-            if (pathname !== redirectPath) {
+            if (!pathname.startsWith(redirectPath)) {
                 return NextResponse.redirect(new URL(redirectPath, origin));
             }
         }

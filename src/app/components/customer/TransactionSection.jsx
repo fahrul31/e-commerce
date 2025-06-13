@@ -1,6 +1,4 @@
 'use client';
-
-
 import React, { useEffect, useState } from 'react';
 import { trackShipment } from '@/app/utils/actions/track';
 import Swal from 'sweetalert2';
