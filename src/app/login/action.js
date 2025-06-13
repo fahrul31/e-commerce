@@ -1,22 +1,24 @@
 'use client';
 
-import { signIn, getSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 export default async function loginData({ email, password }) {
-    // 1. Login user
     const result = await signIn('credentials', {
-        callbackUrl: '/dashboard',
-        redirect: true,
+        redirect: false,
         email,
         password
     });
 
-    if (!result.ok) {
+    if (result?.error) {
         return {
             success: false,
-            message: result.error
+            message: result.error,
+            error: result.error
         };
     }
 
-    return { success: true };
+    return {
+        success: true,
+        message: 'Login berhasil',
+    };
 }

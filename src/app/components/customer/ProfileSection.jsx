@@ -240,7 +240,7 @@ const ProfileSection = () => {
                     ) : (
                         <div className="flex gap-2">
                             <button
-                                onClick={handleSave}
+                                onClick={handleProfileSubmit(handleSave)}
                                 disabled={isLoading}
                                 className="group flex items-center gap-2 px-4 py-2 bg-green-500/80 backdrop-blur-sm text-white rounded-full hover:bg-green-600/80 transition-all duration-300 disabled:opacity-50"
                             >

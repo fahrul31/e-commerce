@@ -13,10 +13,11 @@ export async function POST(req) {
         // Verifikasi signature dari Midtrans
         const serverKey = process.env.MIDTRANS_SERVER_KEY;
         const hash = crypto.createHash("sha512");
-        const order_id = payload.order_id;
-        const rawSig = payload.reference + payload.status_code + payload.gross_amount + serverKey;
+        const rawSig = payload.order_id + payload.status_code + payload.gross_amount + serverKey;
         hash.update(rawSig);
         const expectedSignature = hash.digest("hex");
+        const order_id = payload.reference; //id order di table orders
+
 
 
         //signature valid
@@ -26,7 +27,7 @@ export async function POST(req) {
 
 
         // Ambil informasi penting dari notifikasi
-        const reference = payload.reference; // referensi pesanan
+        const reference = payload.order_id; // ID pesanan
         const transactionStatus = payload.transaction_status; // Status transaksi dari Midtrans
         const paymentType = payload.payment_type; // Jenis pembayaran (misalnya: credit_card, bank_transfer)
         const paidAt = payload.settlement_time ? new Date(payload.settlement_time) : null;
@@ -54,7 +55,7 @@ export async function POST(req) {
             // Ambil data order beserta user dan alamat
             const [orderResult] = await db.query(`
                 SELECT
-                    o.id AS order_id, o.user_id, o.total_price, o.status, o.created_at, o.updated_at,
+                    o.user_id, o.total_price, o.status, o.created_at, o.updated_at,
                     u.name AS customer_name, u.email, u.phone,
                     a.full_address AS shipping_address
                 FROM orders o

@@ -241,11 +241,11 @@ export default function ShipmentsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <span className="text-gray-600">Referensi:</span>
-                                        <p className="font-mono text-xs mt-1 bg-white px-2 py-1 rounded">{orderDetails.transaction?.transaction_reference}</p>
+                                        <p className="font-mono text-xs mt-1 text-gray-900 bg-white px-2 py-1 rounded">{orderDetails.transaction?.transaction_reference}</p>
                                     </div>
                                     <div>
                                         <span className="text-gray-600">Status:</span>
-                                        <p className="font-medium mt-1">{orderDetails.transaction?.transaction_status}</p>
+                                        <p className="font-medium mt-1 text-gray-900">{orderDetails.transaction?.transaction_status}</p>
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +261,7 @@ export default function ShipmentsPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <span className="text-gray-600">Kurir:</span>
-                                        <p className="font-medium mt-1 flex items-center gap-1">
+                                        <p className="font-medium mt-1 flex items-center gap-1 text-gray-900">
                                             {getCourierIcon(orderDetails.shipment?.courier)}
                                             {orderDetails.shipment?.courier}
                                         </p>

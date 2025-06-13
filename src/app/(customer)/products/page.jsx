@@ -22,7 +22,7 @@ export default function ProductListing() {
     const [filterCategory, setFilterCategory] = useState("");
     const [pagination, setPagination] = useState({ count: 0, currentPage: 1, nextPage: null, previousPage: null });
     const [loading, setLoading] = useState(false);
-    const limit = 5;
+    const limit = 10;
 
     const loadCategories = async () => {
         try {
@@ -61,7 +61,7 @@ export default function ProductListing() {
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row justify-between items-center gap-4">
                     <div>
-                        <h1 className="text-2xl lg:text-3xl font-bold">Semua Produk</h1>
+                        <h1 className="text-black text-2xl lg:text-3xl font-bold">Semua Produk</h1>
                         <p className="text-gray-600 mt-1">Menampilkan {products.length} dari {pagination.count} produk</p>
                     </div>
 
@@ -70,7 +70,7 @@ export default function ProductListing() {
                         <button onClick={() => setShowFilters(!showFilters)} className="lg:hidden px-4 py-2 bg-blue-600 text-white rounded-md">
                             Filter & Urutkan
                         </button>
-                        <div className="flex bg-gray-100 rounded-lg p-1">
+                        <div className="flex text-gray-600 bg-gray-100 rounded-lg p-1">
                             <button onClick={() => setViewMode('grid')} className={`${viewMode === 'grid' ? 'bg-white shadow' : 'text-gray-600'} px-3 py-2 rounded-md`}>Grid</button>
                             <button onClick={() => setViewMode('list')} className={`${viewMode === 'list' ? 'bg-white shadow' : 'text-gray-600'} px-3 py-2 rounded-md`}>List</button>
                         </div>
@@ -107,8 +107,6 @@ export default function ProductListing() {
                 <div className="mt-8">
                     <Pagination pagination={pagination} onPageChange={loadProducts} limit={limit} />
                 </div>
-
-                {/* Recently Viewed (optional) */}
             </div>
         </div>
     );

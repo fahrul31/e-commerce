@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { Mail, Lock, Eye, EyeOff, ShoppingBag, Check } from 'lucide-react';
 import SocialLoginButtons from '../components/socialLoginButtons';
 import loginData from "./action";
+import Swal from "sweetalert2";
 
 const loginSchema = Yup.object({
     email: Yup.string().email("Email tidak valid").required("Email tidak boleh kosong"),
@@ -29,7 +30,17 @@ export default function LoginPage() {
 
         if (!result.success) {
             setErrorMessage(result.message || "Login gagal");
-            alert(result.message);
+            await Swal.fire('Login Gagal', result.message || 'Email atau password salah', 'error');
+        } else {
+            await Swal.fire({
+                title: 'Berhasil!',
+                text: 'Login berhasil, mengalihkan ke dashboard...',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = '/dashboard';
+            });
         }
 
         setIsLoading(false);

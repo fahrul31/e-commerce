@@ -118,18 +118,21 @@ export default function CheckoutPage() {
             if (res.ok && data.success) {
                 window.snap.pay(data.data.snap_token, {
                     onSuccess: (result) => {
+
+                        const paymentMethod = result.payment_type;
+                        const orderId = data.data.order_id;
+                        const reference = data.data.reference;
+                        updateTransactionStatus(orderId, reference, paymentMethod);
                         Swal.fire({
                             icon: 'success',
                             title: 'Pembayaran berhasil!',
                             text: 'Pembayaran telah sukses dilakukan.',
                             confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/dashboard'; // Ganti dengan URL tujuan
+                            }
                         });
-                        const paymentMethod = result.payment_type;
-                        const orderId = data.data.order_id;
-                        const reference = data.data.reference;
-                        updateTransactionStatus(orderId, reference, paymentMethod);
-                        window.location.href = "/dashboard";
-
                     },
                     onPending: () => {
                         Swal.fire({
@@ -137,6 +140,10 @@ export default function CheckoutPage() {
                             title: 'Checkout Pending',
                             text: "Cek notifikasi email untuk membayar pesanan",
                             confirmButtonText: 'Coba Lagi'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/profile'; // Ganti dengan URL tujuan
+                            }
                         });
                     },
                     onError: () => {
@@ -145,7 +152,12 @@ export default function CheckoutPage() {
                             title: 'Checkout gagal',
                             text: "Cek notifikasi email untuk membayar pesanan",
                             confirmButtonText: 'Coba Lagi'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/cart'; // Ganti dengan URL tujuan
+                            }
                         });
+
                     },
                 });
             } else {
