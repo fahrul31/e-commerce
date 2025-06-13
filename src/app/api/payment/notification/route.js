@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import crypto from "crypto";
-
+import { sendPurchaseEmails } from "@/app/utils/email/sendPurchaseEmails";
 
 export async function POST(req) {
     try {
@@ -47,6 +47,38 @@ export async function POST(req) {
             `UPDATE transactions SET status = ?, payment_method = ?, paid_at = ? WHERE reference = ?`,
             [finalStatus, paymentType, paidAt, reference]
         );
+
+        // Jika berhasil dibayar, ambil data order dan kirim email
+        if (finalStatus === "paid") {
+            // Ambil data order beserta user dan alamat
+            const [orderResult] = await db.query(`
+                SELECT
+                    o.id AS order_id, o.user_id, o.total_price, o.status, o.created_at, o.updated_at,
+                    u.name AS customer_name, u.email, u.phone,
+                    a.full_address AS shipping_address
+                FROM orders o
+                JOIN users u ON o.user_id = u.id
+                JOIN addresses a ON o.user_id = a.user_id AND a.is_primary = 1
+                WHERE o.id = ?
+            `, [reference]);
+
+            if (orderResult.length === 0) {
+                return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
+            }
+
+            const order = orderResult[0];
+
+            // Ambil item pesanan
+            const [items] = await db.query(`
+                SELECT oi.product_id, oi.quantity, oi.price, p.name as product_name
+                FROM order_items oi
+                JOIN products p ON oi.product_id = p.id
+                WHERE oi.order_id = ?
+            `, [order.order_id]);
+
+            // Kirim email dengan fungsi terpisah
+            await sendPurchaseEmails(order, items);
+        }
 
 
         return NextResponse.json({ success: true, message: "Transaction updated" });

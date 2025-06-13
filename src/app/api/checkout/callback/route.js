@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
-import transporter from "@/lib/nodemailer";
+import { sendPurchaseEmails } from "@/app/utils/email/sendPurchaseEmails";
 
 
 // Fungsi untuk mengambil detail pesanan berdasarkan order_id
@@ -53,63 +53,65 @@ export async function POST(request) {
         const [items] = await db.query(itemsQuery, [order_id]);
 
 
-        // Membuat daftar item dalam bentuk string HTML
-        let itemDetails = '';
-        items.forEach(item => {
-            itemDetails += `
-                <li><strong>Nama Produk:</strong> ${item.product_name}</li>
-                <li><strong>Jumlah:</strong> ${item.quantity}</li>
-                <li><strong>Harga:</strong> Rp ${item.price.toLocaleString('id-ID')}</li>
-                <br />
-            `;
-        });
+        await sendPurchaseEmails(order, items);
+
+        // // Membuat daftar item dalam bentuk string HTML
+        // let itemDetails = '';
+        // items.forEach(item => {
+        //     itemDetails += `
+        //         <li><strong>Nama Produk:</strong> ${item.product_name}</li>
+        //         <li><strong>Jumlah:</strong> ${item.quantity}</li>
+        //         <li><strong>Harga:</strong> Rp ${item.price.toLocaleString('id-ID')}</li>
+        //         <br />
+        //     `;
+        // });
 
 
-        // Kirim email setelah berhasil pembelian ke pembeli
-        const buyerMailOptions = {
-            from: process.env.EMAIL,
-            to: order.email,
-            subject: "Pembayaran Berhasil - Terima Kasih atas Pembelian Anda",
-            html: `
-                <p>Terima kasih telah melakukan pembelian di toko kami!</p>
-                <p>Pembayaran Anda untuk transaksi dengan <strong>Order ID: ${order.order_id}</strong> telah berhasil diproses.</p>
-                <p>Berikut adalah rincian pesanan Anda:</p>
-                <ul>
-                    ${itemDetails}
-                </ul>
-                <p><strong>Total Pembayaran:</strong> Rp ${order.total_price.toLocaleString('id-ID')}</p>
-                <p>Pesanan Anda akan segera diproses dan dikirimkan kepada Anda. Terima kasih atas kepercayaan Anda!</p>
-                <p>Jika Anda memiliki pertanyaan lebih lanjut, jangan ragu untuk menghubungi kami.</p>
-                <p>Terima kasih atas dukungannya!</p>
-            `,
-        };
+        // // Kirim email setelah berhasil pembelian ke pembeli
+        // const buyerMailOptions = {
+        //     from: process.env.EMAIL,
+        //     to: order.email,
+        //     subject: "Pembayaran Berhasil - Terima Kasih atas Pembelian Anda",
+        //     html: `
+        //         <p>Terima kasih telah melakukan pembelian di toko kami!</p>
+        //         <p>Pembayaran Anda untuk transaksi dengan <strong>Order ID: ${order.order_id}</strong> telah berhasil diproses.</p>
+        //         <p>Berikut adalah rincian pesanan Anda:</p>
+        //         <ul>
+        //             ${itemDetails}
+        //         </ul>
+        //         <p><strong>Total Pembayaran:</strong> Rp ${order.total_price.toLocaleString('id-ID')}</p>
+        //         <p>Pesanan Anda akan segera diproses dan dikirimkan kepada Anda. Terima kasih atas kepercayaan Anda!</p>
+        //         <p>Jika Anda memiliki pertanyaan lebih lanjut, jangan ragu untuk menghubungi kami.</p>
+        //         <p>Terima kasih atas dukungannya!</p>
+        //     `,
+        // };
 
 
-        // Email ke admin
-        const adminMailOptions = {
-            from: process.env.EMAIL,
-            to: process.env.ADMIN_EMAIL,
-            subject: `Pesanan Baru - Order ID: ${order.order_id}`,
-            html: `
-                <p>Pesanan baru telah dibuat oleh <strong>${order.customer_name}</strong> (${order.email})</p>
-                <p><strong>Order ID:</strong> ${order.order_id}</p>
-                <p><strong>Alamat Pengiriman:</strong> ${order.shipping_address}</p>
-                <p><strong>Kontak:</strong> ${order.phone}</p>
-                <p>Detail Pesanan:</p>
-                <ul>
-                    ${itemDetails}
-                </ul>
-                <p><strong>Total:</strong> Rp ${order.total_price.toLocaleString('id-ID')}</p>
-            `,
-        };
+        // // Email ke admin
+        // const adminMailOptions = {
+        //     from: process.env.EMAIL,
+        //     to: process.env.ADMIN_EMAIL,
+        //     subject: `Pesanan Baru - Order ID: ${order.order_id}`,
+        //     html: `
+        //         <p>Pesanan baru telah dibuat oleh <strong>${order.customer_name}</strong> (${order.email})</p>
+        //         <p><strong>Order ID:</strong> ${order.order_id}</p>
+        //         <p><strong>Alamat Pengiriman:</strong> ${order.shipping_address}</p>
+        //         <p><strong>Kontak:</strong> ${order.phone}</p>
+        //         <p>Detail Pesanan:</p>
+        //         <ul>
+        //             ${itemDetails}
+        //         </ul>
+        //         <p><strong>Total:</strong> Rp ${order.total_price.toLocaleString('id-ID')}</p>
+        //     `,
+        // };
 
 
-        // Kirim email ke pembeli
-        await transporter.sendMail(buyerMailOptions);
+        // // Kirim email ke pembeli
+        // await transporter.sendMail(buyerMailOptions);
 
 
-        // Kirim email ke admin
-        await transporter.sendMail(adminMailOptions);
+        // // Kirim email ke admin
+        // await transporter.sendMail(adminMailOptions);
 
 
         return NextResponse.json({
