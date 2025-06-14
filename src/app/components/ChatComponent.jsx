@@ -23,7 +23,7 @@ const ChatComponent = ({ senderId, receiverId = 4, isAdmin = false }) => {
         const fetchMessages = async () => {
             try {
                 console.log(`Fetching messages for senderId=${senderId} & receiverId=${receiverId}`);
-                const res = await fetch(`http://43.129.41.206:5000/api/messages?senderId=${senderId}&receiverId=${receiverId}`);
+                const res = await fetch(`https://websocket.aninyan.com/api/messages?senderId=${senderId}&receiverId=${receiverId}`);
 
                 if (!res.ok) {
                     const errorText = await res.text();
@@ -49,7 +49,7 @@ const ChatComponent = ({ senderId, receiverId = 4, isAdmin = false }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://43.129.41.206:5000?senderId=${senderId}&receiverId=${receiverId}`);
+        const socket = new WebSocket(`ws://websocket.aninyan.com?senderId=${senderId}&receiverId=${receiverId}`);
         socketRef.current = socket;
 
         socket.onopen = () => {
