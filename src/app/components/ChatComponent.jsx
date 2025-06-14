@@ -23,7 +23,7 @@ const ChatComponent = ({ senderId, receiverId = 4, isAdmin = false }) => {
         const fetchMessages = async () => {
             try {
                 console.log(`Fetching messages for senderId=${senderId} & receiverId=${receiverId}`);
-                const res = await fetch(`http://localhost:5000/api/messages?senderId=${senderId}&receiverId=${receiverId}`);
+                const res = await fetch(`http://43.129.41.206:5000/api/messages?senderId=${senderId}&receiverId=${receiverId}`);
 
                 if (!res.ok) {
                     const errorText = await res.text();
