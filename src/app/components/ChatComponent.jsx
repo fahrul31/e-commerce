@@ -49,7 +49,7 @@ const ChatComponent = ({ senderId, receiverId = 4, isAdmin = false }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://websocket.aninyan.com?senderId=${senderId}&receiverId=${receiverId}`);
+        const socket = new WebSocket(`wss://websocket.aninyan.com?senderId=${senderId}&receiverId=${receiverId}`);
         socketRef.current = socket;
 
         socket.onopen = () => {
